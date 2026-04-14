@@ -1,11 +1,13 @@
 type SupabaseEnvName = 'NEXT_PUBLIC_SUPABASE_URL' | 'NEXT_PUBLIC_SUPABASE_ANON_KEY'
 
 function readEnv(name: SupabaseEnvName) {
+  const isServer = typeof window === 'undefined'
+
   if (name === 'NEXT_PUBLIC_SUPABASE_URL') {
-    return process.env.NEXT_PUBLIC_SUPABASE_URL
+    return process.env.NEXT_PUBLIC_SUPABASE_URL ?? (isServer ? process.env.SUPABASE_URL : undefined)
   }
 
-  return process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  return process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? (isServer ? process.env.SUPABASE_ANON_KEY : undefined)
 }
 
 function getRequiredEnv(name: SupabaseEnvName) {
@@ -13,7 +15,7 @@ function getRequiredEnv(name: SupabaseEnvName) {
 
   if (!value || !value.trim()) {
     throw new Error(
-      `[Supabase] Missing environment variable: ${name}. Configure it in .env.local and restart the dev server.`,
+      `[Supabase] Missing environment variable: ${name}. Configure NEXT_PUBLIC_* for browser usage and (optionally) SUPABASE_URL/SUPABASE_ANON_KEY for server runtime.`,
     )
   }
 
