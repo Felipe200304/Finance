@@ -9,9 +9,9 @@ import { LogOut, Wallet, Menu, X, Sparkles } from 'lucide-react'
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const router = useRouter()
-  const supabase = createClient()
 
   async function handleSignOut() {
+    const supabase = createClient()
     await supabase.auth.signOut()
     router.push('/')
     router.refresh()
